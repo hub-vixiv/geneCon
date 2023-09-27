@@ -1,0 +1,723 @@
+@charset "UTF-8";
+/*--------------------
+Base
+----------------------*/
+/*example nav's background-color*/
+/*example button's background-dolor*/
+/*example button's font color*/
+/*example button's point color*/
+/* m = mobile */
+/* t = tablet */
+/* media mixin */
+/* ＰＣファースト 指定以下に適用 */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  scroll-behavior: smooth;
+  margin: 0 auto;
+  padding: 0;
+  font-family: "Zen Old Mincho", "Noto Serif JP", serif;
+  color: #333;
+  overflow-x: hidden;
+}
+
+a {
+  text-decoration: none;
+  color: #333;
+}
+
+li {
+  list-style: none;
+  list-style-position: inside;
+}
+
+img {
+  max-width: 100%;
+  vertical-align: bottom;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  text-align: center;
+}
+
+/*--------------------
+共通設定
+----------------------*/
+.wrap {
+  max-width: 1280px;
+  margin: 80px auto 80px;
+  text-align: center;
+}
+
+.page_title {
+  font-size: 64px;
+  color: #fff;
+}
+
+.section_title {
+  display: inline-block;
+  position: relative;
+  margin: 80px auto 50px;
+  font-size: 48px;
+}
+
+.section_wrap {
+  max-width: 1280px;
+}
+
+.text_wrap {
+  padding: 0 40px;
+  width: 50%;
+  text-align: center;
+}
+.text_wrap .text {
+  text-align: left;
+  font-size: 24px;
+}
+
+.section_img {
+  width: 50%;
+}
+.section_img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.a_btn {
+  margin-top: 20px;
+  display: inline-block;
+  border: 2px solid #333;
+  padding: 8px 40px;
+  position: relative;
+  font-size: 24px;
+}
+.a_btn::before {
+  content: "";
+  position: absolute;
+  top: 18px;
+  right: -60px;
+  width: 20px;
+  height: 3px;
+  border-top: 2px solid #333;
+  transform: rotate(45deg);
+  transition: 0.3s;
+}
+.a_btn::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -60px;
+  width: 80px;
+  height: 3px;
+  border-top: 2px solid #333;
+  transition: 0.3s;
+}
+.a_btn:hover::before, .a_btn:hover::after {
+  right: -70px;
+}
+
+.fade_item {
+  opacity: 0;
+  transform: translate(0, 30%);
+  transition: 1s;
+}
+
+.fade_item_left {
+  transform: translate(-100%, 0%);
+  transition: 1s;
+}
+
+.fade_item_right {
+  transform: translate(100%, 0%);
+  transition: 1s;
+}
+
+.fade_active {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+/*--------------------
+ヘッダー
+----------------------*/
+.header {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
+  z-index: 20;
+  margin: 0 auto;
+  width: 100vw;
+  height: 80px;
+  line-height: 80px;
+  display: flex;
+  justify-content: space-between;
+}
+.header.fixed {
+  position: fixed;
+  background-color: #fff;
+}
+.header.fixed .header_menu nav .nav_ul .nav_li a {
+  color: #333;
+}
+.header .header_left {
+  z-index: 5;
+  opacity: 0;
+}
+.header .header_left.active {
+  opacity: 1;
+}
+.header .header_left h1 a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 32px;
+  color: #fff;
+}
+.header .header_left h1 a img {
+  display: inline-block;
+  width: 50px;
+}
+.header .header_menu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  padding: 0 20px;
+  width: 100%;
+  display: flex;
+  justify-content: end;
+  z-index: 20;
+}
+.header .header_menu nav {
+  transition: 1s;
+}
+.header .header_menu nav .nav_ul {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.header .header_menu nav .nav_ul .nav_li {
+  text-align: center;
+  padding: 5px 10px;
+  font-size: 24px;
+}
+.header .header_menu nav .nav_ul a {
+  display: block;
+  width: 100%;
+  color: #fff;
+  position: relative;
+}
+.header .header_menu nav .nav_ul a::after {
+  content: "";
+  position: absolute;
+  bottom: 20px; /*アンダーラインがaタグの下端から現れる*/
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #fff;
+  transform: scale(0, 1); /*アンダーラインの縮尺比率。ホバー前はx方向に0*/
+  transform-origin: left top; /*変形（アンダーラインの伸長）の原点がaタグ（各メニュー）の左端*/
+  transition: transform 0.3s; /*変形の時間*/
+}
+.header .header_menu nav .nav_ul a:hover::after {
+  transform: scale(1, 1); /*ホバー後、x軸方向に1（相対値）伸長*/
+}
+.header .header_menu.fixed nav .nav_ul .nav_li a {
+  color: #333;
+}
+.header .header_right {
+  display: none;
+  /*ハンバーガーボタン*/
+  /*ボタン内側*/
+  /*activeクラスが付与されると線が回転して×になり、Menu⇒Closeに変更*/
+}
+.header .header_right .open_btn {
+  position: relative; /*ボタン内側の基点となるためrelativeを指定*/
+  color: #0000cd;
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
+  margin-right: 2vw;
+}
+.header .header_right .open_btn span {
+  display: inline-block;
+  transition: all 0.4s; /*アニメーションの設定*/
+  position: absolute;
+  left: 14px;
+  height: 2px;
+  border-radius: 5px;
+  background: #fff;
+  width: 45%;
+}
+.header .header_right .open_btn span:nth-of-type(1) {
+  top: 13px;
+}
+.header .header_right .open_btn span:nth-of-type(2) {
+  top: 19px;
+}
+.header .header_right .open_btn span:nth-of-type(3) {
+  top: 25px;
+}
+.header .header_right .open_btn.active span:nth-of-type(1) {
+  top: 14px;
+  left: 18px;
+  transform: translateY(6px) rotate(-45deg);
+  width: 30%;
+}
+.header .header_right .open_btn.active span:nth-of-type(2) {
+  opacity: 0;
+}
+.header .header_right .open_btn.active span:nth-of-type(3) {
+  top: 26px;
+  left: 18px;
+  transform: translateY(-6px) rotate(45deg);
+  width: 30%;
+}
+
+main {
+  width: 100%;
+  /*--------------------
+  fv
+  ----------------------*/
+  /*--------------------
+  works
+  ----------------------*/
+}
+main .fv {
+  position: relative;
+}
+main .fv .swiper {
+  width: 100vw;
+  height: 100vh;
+}
+main .fv .swiper .swiper-wrapper .swiper-slide .slide_wrap {
+  width: 100vw;
+  height: 100vh;
+}
+main .fv .swiper .swiper-wrapper .swiper-slide .slide_wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  animation: zoomUp 7s linear 0s normal both;
+}
+main .fv .fv_inner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 768px;
+  color: #fff;
+}
+main .fv .fv_inner .fv_logo {
+  width: 60px;
+}
+main .fv .fv_inner .fv_name {
+  font-size: 80px;
+}
+main .fv .fv_inner .fv_name span {
+  font-size: 56px;
+}
+main .fv .fv_inner .fv_name .sp_br {
+  display: none;
+}
+main .fv .fv_inner .fv_copy {
+  font-size: 40px;
+}
+main .works .works_img_wrap {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 50px;
+}
+main .works .works_img_wrap .works_img {
+  display: block;
+  width: 40%;
+  height: auto;
+  object-fit: cover;
+  box-shadow: 4px 4px 8px black;
+  position: relative;
+  transition: 0.25s;
+}
+main .works .works_img_wrap .works_img::before {
+  content: "project";
+  position: absolute;
+  top: -10px;
+  left: 10px;
+  z-index: 5;
+  width: 0;
+  height: 0;
+  border: 8px solid transparent;
+  color: #333;
+}
+main .works .works_img_wrap .works_img::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 0;
+  height: 0;
+  border: 5px solid transparent;
+}
+main .works .works_img_wrap .works_img:hover::before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  border-top-color: #0000cd;
+  border-right-color: #0000cd;
+  transition: width 0.25s ease-out, height 0.25s ease-out 0.25s;
+}
+main .works .works_img_wrap .works_img:hover::after {
+  width: 100%;
+  height: 100%;
+  border-bottom-color: #0000cd;
+  border-left-color: #0000cd;
+  transition: border-color 0s ease-out 0.5s, width 0.25s ease-out 0.5s, height 0.25s ease-out 0.75s;
+}
+main .about {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: center;
+}
+main .recrut {
+  display: flex;
+  justify-content: center;
+}
+main .company {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: center;
+}
+main .company dl {
+  padding-left: 40px;
+  display: flex;
+  flex-wrap: wrap;
+}
+main .company dl dt, main .company dl dd {
+  font-size: 24px;
+  height: 2em;
+}
+main .company dl dt {
+  width: 35%;
+}
+main .company dl dd {
+  width: 65%;
+}
+main .company .btn_wrap {
+  padding-top: 80px;
+  text-align: center;
+}
+
+.footer {
+  text-align: center;
+  background-color: #0000cd;
+  color: #fff;
+}
+.footer .footer_copy {
+  height: 80px;
+  line-height: 80px;
+}
+
+/*--------------------
+ファーストビューのアニメーション
+----------------------*/
+@keyframes zoomUp {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.15);
+  }
+}
+/*--------------------
+メディアクエリ
+----------------------*/
+@media screen and (max-width: 768px) {
+  .section_title {
+    font-size: 24px;
+  }
+  .text_wrap {
+    margin: 50px auto 30px;
+    width: 100%;
+    padding: 0;
+  }
+  .text_wrap .text {
+    width: 100%;
+    font-size: 16px;
+  }
+  .section_img {
+    width: 90vw;
+  }
+  .section_img img {
+    width: 100%;
+  }
+  .a_btn {
+    font-size: 20px;
+  }
+  .a_btn::before, .a_btn::after {
+    display: none;
+  }
+  .header {
+    height: 50px;
+  }
+  .header.fixed {
+    background-color: #0000cd;
+  }
+  .header .header_left h1 a {
+    padding: 0 10px;
+    height: 50px;
+    line-height: 50;
+    font-size: 24px;
+  }
+  .header .header_left h1 a img {
+    width: 30px;
+  }
+  .header .header_menu {
+    right: -100%;
+    background-color: #0000cd;
+    height: 100vh;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    transition: 0.5s;
+  }
+  .header .header_menu.fixed nav .nav_ul .nav_li a {
+    color: #fff;
+  }
+  .header .header_menu nav .nav_ul {
+    flex-direction: column;
+  }
+  .header .header_menu.fixed {
+    right: -100%;
+  }
+  .header .header_menu.active {
+    right: 0;
+  }
+  .header .header_right {
+    display: block;
+  }
+  .header .header_right .open_btn {
+    z-index: 30;
+  }
+  main .fv .fv_inner .fv_name {
+    font-size: 48px;
+  }
+  main .fv .fv_inner .fv_name span {
+    font-size: 32px;
+  }
+  main .fv .fv_inner .fv_name .sp_br {
+    display: inline-block;
+  }
+  main .fv .fv_inner .fv_copy {
+    font-size: 24px;
+  }
+  main .works .works_img_wrap {
+    margin: 0 auto;
+    flex-direction: column;
+    align-items: center;
+    width: 80vw;
+  }
+  main .works .works_img_wrap .works_img {
+    width: 100%;
+  }
+  main .section_wrap {
+    width: 90vw;
+  }
+  main .section_wrap .about, main .section_wrap .recrut, main .section_wrap .company {
+    flex-direction: column;
+  }
+  main .section_wrap .company dl dt, main .section_wrap .company dl dd {
+    font-size: 16px;
+  }
+  footer .footer_copy {
+    font-size: 16px;
+  }
+}
+.header {
+  padding: 0 20px;
+  background-color: #0000cd;
+}
+.header .header_left h1 a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 24px;
+}
+.header .header_left h1 a img {
+  width: 30px;
+}
+
+main .page_title_wrap {
+  margin-top: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30vh;
+  background-position: center center;
+}
+main .page_title_wrap.recrut_page {
+  background-image: url(../imgs/fv2.png);
+}
+main .page_title_wrap.contact_page {
+  background-image: url(../imgs/fv1.png);
+}
+main .page_main {
+  margin-top: 50px;
+}
+main .page_main h3 {
+  font-size: 48px;
+}
+main .page_main dl {
+  width: 80vw;
+  margin: 50px auto 80px;
+  display: flex;
+  flex-wrap: wrap;
+}
+main .page_main dl dt, main .page_main dl dd {
+  font-size: 24px;
+  line-height: 42px;
+  border-bottom: 1px solid #333;
+}
+main .page_main dl dt {
+  width: 35%;
+}
+main .page_main dl dd {
+  width: 65%;
+}
+main .page_main.contact_page_form form {
+  width: 750px;
+  margin: 0 auto;
+}
+main .page_main.contact_page_form form dl {
+  width: 750px;
+  margin-bottom: 20px;
+}
+main .page_main.contact_page_form form dt, main .page_main.contact_page_form form dd {
+  border: none;
+  margin-bottom: 20px;
+}
+main .page_main.contact_page_form form dt {
+  padding-right: 20px;
+  text-align: right;
+}
+main .page_main.contact_page_form form dt .require {
+  margin-left: 10px;
+  border-radius: 15px;
+  padding: 2px 5px;
+  background-color: red;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  font-family: "Noto San JP";
+}
+main .page_main.contact_page_form form dd input[type=text],
+main .page_main.contact_page_form form dd input[type=email], main .page_main.contact_page_form form dd textarea {
+  width: 100%;
+}
+main .page_main.contact_page_form form dd input[type=text]:focus,
+main .page_main.contact_page_form form dd input[type=email]:focus, main .page_main.contact_page_form form dd textarea:focus {
+  outline: 1px solid #0000cd;
+  box-shadow: 0 0 3px #0000cd;
+}
+main .page_main.contact_page_form form dd input[type=text],
+main .page_main.contact_page_form form dd input[type=email] {
+  height: 40px;
+}
+main .page_main.contact_page_form form dd textarea {
+  height: 200px;
+}
+main .page_main.contact_page_form form .submit_wrap {
+  text-align: center;
+  margin-bottom: 50px;
+}
+main .page_main.contact_page_form form .submit_wrap .submit_btn {
+  background-color: transparent;
+  padding: 8px 24px;
+  font-size: 24px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+main .page_main.contact_page_form form .submit_wrap .submit_btn:hover {
+  background-color: #333;
+  color: #fff;
+}
+
+/*--------------------
+メディアクエリ
+----------------------*/
+@media screen and (max-width: 768px) {
+  .header {
+    height: 50px;
+  }
+  .header.fixed {
+    background-color: #0000cd;
+  }
+  .header .header_left {
+    opacity: 1;
+  }
+  .header .header_menu {
+    right: -100%;
+    background-color: #0000cd;
+    height: 100vh;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    transition: 0.5s;
+  }
+  .header .header_menu nav .nav_ul {
+    flex-direction: column;
+  }
+  .header .header_menu.fixed {
+    right: -100%;
+  }
+  .header .header_menu.active {
+    right: 0;
+  }
+  .header .header_right {
+    display: block;
+  }
+  .header .header_right .open_btn {
+    z-index: 30;
+  }
+  main .page_title_wrap {
+    margin-top: 50px;
+  }
+  main .page_title_wrap .page_title {
+    font-size: 48px;
+  }
+  main .page_main h3 {
+    font-size: 32px;
+  }
+  main .page_main dl dt, main .page_main dl dd {
+    font-size: 16px;
+  }
+  main .page_main.contact_page_form {
+    width: 80vw;
+    margin: 50px auto;
+  }
+  main .page_main.contact_page_form form {
+    width: 80vw;
+  }
+  main .page_main.contact_page_form form dl {
+    flex-direction: column;
+    margin: 0 auto;
+    width: 80vw;
+  }
+  main .page_main.contact_page_form form dl dt, main .page_main.contact_page_form form dl dd {
+    text-align: left;
+    width: 100%;
+  }
+  main .page_main.contact_page_form form dl dt {
+    margin-bottom: 10px;
+  }
+}

@@ -1,0 +1,216 @@
+@use "style" as s;
+
+.header{
+    padding: 0 20px;
+    background-color: s.$key_color;
+    
+    .header_left{
+        h1{
+          a{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: s.$font_color2;
+            font-size: 24px;
+            img{
+                width: 30px;
+            }
+
+          }
+        }
+    }
+}
+main{
+  .page_title_wrap{
+    margin-top: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30vh;
+    background-position: center center;
+    &.recrut_page{
+        background-image: url(../imgs/fv2.png);
+    }
+    &.contact_page{
+        background-image: url(../imgs/fv1.png);
+    }
+  }
+
+  .page_main{
+    margin-top: 50px;
+    h3{
+        font-size: 48px;
+    }
+    dl{
+        width: 80vw;
+        margin: 50px auto 80px;
+        display: flex;
+        flex-wrap: wrap;
+        dt,dd{
+            font-size: 24px;
+            line-height: 42px;
+            border-bottom: 1px solid s.$font_color;
+        }
+        dt{
+            width: 35%;
+        }
+        dd{
+            width: 65%;
+        }
+    }
+    &.contact_page_form{
+      form{
+        width: 750px;
+        margin: 0 auto;
+        dl{
+          width: 750px;
+          margin-bottom: 20px;  
+        }
+        dt,dd{
+          border: none;
+          margin-bottom: 20px;
+        }
+        dt{
+          padding-right: 20px;
+          text-align: right;
+          .require{
+            margin-left: 10px;
+            border-radius: 15px;
+            padding: 2px 5px;
+            background-color: red;
+            color: s.$font_color2;
+            font-size: 16px;
+            font-weight: bold;
+            font-family: 'Noto San JP';
+          }
+        }
+        dd{
+          input[type="text"],
+          input[type="email"],textarea{
+            width: 100%;
+            &:focus{
+              outline:1px solid s.$key_color;
+              box-shadow: 0 0 3px s.$key_color;
+            }
+          }
+          input[type="text"],
+          input[type="email"],{
+            height: 40px;
+          }
+          textarea{
+            height: 200px;
+          }
+        }
+        .submit_wrap{
+          text-align: center;
+          margin-bottom: 50px;
+          .submit_btn{
+            background-color: transparent;
+            padding: 8px 24px;
+            font-size: 24px;
+            cursor: pointer;
+            transition: .3s;
+            &:hover{
+              background-color: s.$font_color;
+              color: s.$bg_color;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/*--------------------
+メディアクエリ
+----------------------*/
+@include s.media_m(){
+
+.header{
+    height: 50px;
+    &.fixed{
+      background-color: s.$key_color;
+    }
+    .header_left{
+      opacity: 1;
+    }
+    .header_menu{
+      right: -100%;
+      background-color: s.$key_color;
+      height: 100vh;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      transition: 0.5s;
+      nav{
+        .nav_ul{
+          flex-direction: column;
+          .nav_li{
+          }
+        }
+      }
+      &.fixed{
+        right: -100%;
+      }
+      &.active{
+        right: 0;
+      }
+    }
+
+    .header_right{
+      display: block;
+      .open_btn{
+        z-index: 30;
+      }
+
+
+    }
+  }
+
+  main{
+    .page_title_wrap{
+      margin-top: 50px;
+      .page_title{
+        font-size: 48px;
+      }
+  
+    }
+    .page_main{
+      h3{
+        font-size: 32px;
+      }
+        dl{
+          dt,dd{
+            font-size: 16px;
+          }
+          dt{
+            }
+            dd{
+
+            }
+        }
+        &.contact_page_form{
+          width: 80vw;
+          margin: 50px auto;
+          form{
+            width: 80vw;
+            dl{
+              flex-direction: column;
+              margin: 0 auto;
+              width: 80vw;
+              dt,dd{
+                text-align: left;
+                width: 100%;
+              }
+              dt{
+                margin-bottom: 10px;
+              }
+            }
+
+          }
+
+        }
+    }
+
+  }
+}
